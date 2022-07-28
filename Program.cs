@@ -12,8 +12,8 @@ namespace Passwordcreator
 
         static void Main(string[] args)
         {
-            string text, password, lenguage;
-            StringBuilder velue = new StringBuilder();
+            string text, password, language;
+            StringBuilder value = new StringBuilder();
 
             Random random = new Random();
 
@@ -24,7 +24,7 @@ namespace Passwordcreator
 
             do
             {
-                velue.Clear();
+                value.Clear();
 
                 text = Console.ReadLine();
 
@@ -32,26 +32,26 @@ namespace Passwordcreator
                 {
                     //Password settings
                     Console.Write("Password setigs: " +
-                        "\nThis program can create password only with three lenguage Ukraine English" + 
+                        "\nThis program can create password only with three language Ukraine English" + 
                         "\nand punctuation simbols." +
                         "\nPassword width: ");
 
                     int pw = Convert.ToInt32(Console.ReadLine());
                     
-                    Console.Write("Lenguage: Ukraine, English" + 
+                    Console.Write("Language: Ukraine, English" + 
                         "\nOther simbols: Punctuation, Number" +
-                        "\nWhat lenguages or punctuation do you want to be in your password: ");
+                        "\nWhat languages or punctuation do you want to be in your password: ");
 
-                    lenguage = Console.ReadLine();
+                    language = Console.ReadLine();
                     Console.WriteLine("Your password: ");
 
-                    AddLenguages(lenguage, velue, english, ukraine, punctuation, number);
+                    AddLenguages(language, value, english, ukraine, punctuation, number);
 
 
                     password = null;
 
                     for (int nr = 0; nr <= pw; nr++)
-                        password = password + velue[random.Next(0, velue.Length)];
+                        password = password + value[random.Next(0, value.Length)];
 
                     Console.WriteLine(password);
                 }
@@ -65,19 +65,19 @@ namespace Passwordcreator
             //End of function
         }
         
-        static void AddLenguages(string lenguage, StringBuilder velue, string english, string ukraine, string punctuation, string number)
+        static void AddLenguages(string language, StringBuilder value, string english, string ukraine, string punctuation, string number)
         {
-            if (lenguage.Contains("Ukraine"))
-                velue.Append(ukraine);
+            if (language.Contains("Ukraine"))
+                value.Append(ukraine);
 
-            if (lenguage.Contains("English"))
-                velue.Append(english);
+            if (language.Contains("English"))
+                value.Append(english);
 
-            if (lenguage.Contains("Number"))
-                velue.Append(number);
+            if (language.Contains("Number"))
+                value.Append(number);
 
-            if (lenguage.Contains("Punctuation"))
-                velue.Append(punctuation);
+            if (language.Contains("Punctuation"))
+                value.Append(punctuation);
         }
     }
 }
