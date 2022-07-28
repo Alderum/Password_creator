@@ -32,8 +32,8 @@ namespace Passwordcreator
                 {
                     //Password settings
                     Console.Write("Password setigs: " +
-                        "\nThis program can create password only with three lenguage Russian Ukraine English" + 
-                        "\n((анг) and next first simbol) and punctuation simbols." +
+                        "\nThis program can create password only with three lenguage Ukraine English" + 
+                        "\nand punctuation simbols." +
                         "\nPassword width: ");
 
                     int pw = Convert.ToInt32(Console.ReadLine());
