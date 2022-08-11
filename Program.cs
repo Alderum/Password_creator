@@ -19,7 +19,7 @@ namespace Passwordcreator
             Random random = new Random();
             DataBase dataBase = new DataBase();
             //Utils to MySQL
-            dataBase.utils = "datasource=localhost;port=3306;username=root;password=" + AddPassword();
+            dataBase.utils += dataBase.AddPassword();
 
             string english = "qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM";
             string ukraine = "йцукенгшщзхїфівапролджєячсмитьбю";
@@ -123,12 +123,6 @@ namespace Passwordcreator
 
             if (language.Contains("Punctuation"))
                 value.Append(punctuation);
-        }
-
-        private static string AddPassword()
-        {
-            Console.Write("Password: ");
-            return Console.ReadLine();
         }
     }
 }

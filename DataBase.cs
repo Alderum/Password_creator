@@ -5,12 +5,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MySql.Data.MySqlClient;
+using PasswordCreator;
 
 namespace PasswordCreator
 {
     class DataBase
     {
-        public string utils;
+        public string utils = "datasource=localhost;port=3306;username=root;password=";
+
+        public string AddPassword()
+        {
+            Console.Write("Password: ");
+            return Console.ReadLine();
+        }
 
         private void CommandExecutor(string text)
         {
