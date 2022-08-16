@@ -99,8 +99,19 @@ namespace Passwordcreator
                     //Update password by name to pass
                     dataBase.Update(name, pass);
                 }
+                else if (text == "help")
+                {
+                    Console.WriteLine("To create and save password write: save create password" + 
+                        "\nTo delete password write:          delete password" +
+                        "\nTo show all passwords:             show passwords" + 
+                        "\nTo show password by name:          show password by name: passwords name" +
+                        "\nTo update password write:          update password");
+                }
                 else
-                    Console.WriteLine("To create password write: create password");
+                {
+                    Console.WriteLine("To create password write: create password" + 
+                        "\nFor more information write: help");
+                }
 
             } while (text != "Stop");
 
