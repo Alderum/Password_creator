@@ -4,117 +4,153 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using PasswordCreator;
+using System.Windows.Media;
+using System.Threading;
 
 namespace Passwordcreator
 {
     class Program
     {
-
+        public static string assetsPath = Environment.CurrentDirectory.Replace("\\bin\\Debug", "\\Assets");
+        public static uint hash;
 
         static void Main(string[] args)
         {
             string text, password, language;
+
             StringBuilder value = new StringBuilder();
+            MediaPlayer mediaPlayer = new MediaPlayer();
+            mediaPlayer.Open(new Uri(assetsPath + "\\Login.mp3", UriKind.Absolute));
+            mediaPlayer.Play();
 
             Random random = new Random();
-            DataBase dataBase = new DataBase();
-            //Utils to MySQL
-            dataBase.utils += dataBase.AddPassword();
+
+            DataBase dataBase = new DataBase(assetsPath);
+            dataBase.LogIn();
 
             string english = "qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM";
             string ukraine = "йцукенгшщзхїфівапролджєячсмитьбю";
             string punctuation = "[]{};:',<.>/?-_=+|!#@$%^&*()~`";
             string number = "1234567890";
+            string name, pass;
             do
             {
                 value.Clear();
 
                 text = Console.ReadLine();
-
-                if (text.Contains("create password"))
+                switch(text)
                 {
-                    //Password settings
-                    Console.Write("Password setigs: " +
-                        "\nThis program can create password only with three language Ukraine English" +
-                        "\nand punctuation simbols." +
-                        "\nPassword width: ");
+                    case "cp":
+                        //Password settings
+                        Console.Write("Password setigs: " +
+                            "\nThis program can create password only with three language Ukraine English" +
+                            "\nand punctuation simbols." +
+                            "\nPassword width: ");
 
-                    int pw = Convert.ToInt32(Console.ReadLine());
+                        int pw = Convert.ToInt32(Console.ReadLine());
 
-                    Console.Write("Language: Ukraine, English" +
-                        "\nOther simbols: Punctuation, Number" +
-                        "\nWhat languages or punctuation do you want to be in your password: ");
+                        Console.Write("Language: Ukraine, English" +
+                            "\nOther simbols: Punctuation, Number" +
+                            "\nWhat languages or punctuation do you want to be in your password: ");
 
-                    language = Console.ReadLine();
-                    Console.WriteLine("Your password: ");
+                        language = Console.ReadLine();
+                        Console.WriteLine("Your password: ");
 
-                    //Add lenguage by name to value
-                    AddLenguages(language, value, english, ukraine, punctuation, number);
+                        //Add lenguage by name to value
+                        AddLenguages(language, value, english, ukraine, punctuation, number);
 
 
-                    password = null;
+                        password = null;
 
-                    for (int nr = 0; nr <= pw; nr++)
-                        password = password + value[random.Next(0, value.Length)];
+                        for (int nr = 0; nr <= pw; nr++)
+                            password = password + value[random.Next(0, value.Length)];
 
-                    Console.WriteLine(password);
+                        Console.WriteLine(password);
+                        Console.WriteLine("Do you want to save that password? (Yes - Y, No - N)");
 
-                    if (text.Contains("save"))
-                    {
-                        Console.WriteLine("Enter name for your password: ");
-                        string name = Console.ReadLine();
+                        if(Console.ReadLine().Contains("Y"))
+                        {
+                            Console.WriteLine("Enter name for your password: ");
+                            name = Console.ReadLine();
 
-                        //Save password with name
-                        dataBase.Save(password, name);
-                    }
+                            mediaPlayer.Open(new Uri(assetsPath + "\\Save.mp3", UriKind.Absolute));
+                            mediaPlayer.Play();
+                            //Save password with name
+                            dataBase.SavePassword(password, name);
+                        }
+                        break;
 
+                    case "dp":
+                        Console.WriteLine("Enter name of the password for delete: ");
+
+                        name = Console.ReadLine();
+                        //Delete password by name
+                        dataBase.Delete(name);
+                        break;
+
+                    case "sp":
+                        mediaPlayer.Open(new Uri(assetsPath + "\\Show.mp3", UriKind.Absolute));
+                        mediaPlayer.Play();
+                        dataBase.Show();
+                        break;
+
+                    case "spbn":
+                        Console.WriteLine("Enter the name of your password: ");
+                        //Extract passwords name
+                        name = Console.ReadLine();
+
+
+                        mediaPlayer.Open(new Uri(assetsPath + "\\Show.mp3", UriKind.Absolute));
+                        mediaPlayer.Play();
+                        //Show password by name (text)
+                        dataBase.ShowByName(name);
+                        break;
+
+                    case "up":
+                        Console.WriteLine("Name of password wich you want to update: ");
+                        name = Console.ReadLine();
+
+                        Console.WriteLine("New password: ");
+                        pass = Console.ReadLine();
+
+                        //Update password by name to pass
+                        dataBase.Update(name, pass);
+                        break;
+
+                    case "cyp":
+                        Console.WriteLine("Enter a name of your password:");
+                        name = Console.ReadLine();
+                        Console.WriteLine("Enter a password text:");
+                        pass = Console.ReadLine();
+
+                        mediaPlayer.Open(new Uri(assetsPath + "\\Save.mp3", UriKind.Absolute));
+                        mediaPlayer.Play();
+                        //Save password
+                        dataBase.SavePassword(pass, name);
+                        break;
+
+                    case "help":
+                        Console.WriteLine("To create and save random password write: cp" +
+                                          "\nTo delete password write:               dp" +
+                                          "\nTo show all passwords:                  sp" +
+                                          "\nTo show password by name:               spbn" +
+                                          "\nTo create your password:                cyp" +
+                                          "\nTo update password write:               up");
+                        break;
+
+                    case "stop":
+                        break;
+
+                    default:
+                        Console.WriteLine("To create password write: create password" +
+                            "\nFor more information write: help");
+                        break;
                 }
-                else if(text == "delete password")
-                {
-                    Console.WriteLine("Enter name of the password for delete: ");
+            } while (text != "stop");
 
-                    string name = Console.ReadLine();
-                    //Delete password by name
-                    dataBase.Delete(name);
-                }
-                else if(text == "show passwords")
-                {
-                    dataBase.Show();
-                }
-                else if(text.Contains("show password by name: "))
-                {
-                    //Extract passwords name
-                    text = text.Remove(0, 23);
-                    //Show password by name (text)
-                    dataBase.ShowByName(text);
-                }
-                else if (text.Contains("update password"))
-                {
-                    Console.WriteLine("Name of password wich you want to update: ");
-                    string name = Console.ReadLine();
-
-                    Console.WriteLine("New password: ");
-                    string pass = Console.ReadLine();
-
-                    //Update password by name to pass
-                    dataBase.Update(name, pass);
-                }
-                else if (text == "help")
-                {
-                    Console.WriteLine("To create and save password write: save create password" + 
-                        "\nTo delete password write:          delete password" +
-                        "\nTo show all passwords:             show passwords" + 
-                        "\nTo show password by name:          show password by name: passwords name" +
-                        "\nTo update password write:          update password");
-                }
-                else
-                {
-                    Console.WriteLine("To create password write: create password" + 
-                        "\nFor more information write: help");
-                }
-
-            } while (text != "Stop");
-
+            mediaPlayer.Open(new Uri(assetsPath + "\\Exit.mp3", UriKind.Absolute));
+            mediaPlayer.Play();
+            Thread.Sleep(4000);
 
             return;
 
